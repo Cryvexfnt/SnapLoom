@@ -25,7 +25,6 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/fontawesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -93,7 +92,6 @@
     <div class="w-full bg-black/40 border-b border-brand-500/20 py-3 shadow-2xl relative z-10">
         <div class="marquee-container">
             <div class="marquee-content">
-                <!-- Sample Top Banner Photos -->
                 <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Beach">
                 <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Mountains">
                 <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Nature">
@@ -101,7 +99,7 @@
                 <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Cat">
                 <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Landscape">
                 <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Forest">
-                <!-- Duplicate set for seamless scrolling animation -->
+                <!-- Duplicate set for seamless animation -->
                 <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Beach">
                 <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Mountains">
                 <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&h=180&fit=crop" class="h-28 w-44 object-cover rounded-xl border border-brand-500/30 shadow-lg" alt="Nature">
@@ -127,7 +125,6 @@
 
         <!-- VIEW 1: LANDING & INITIAL DROPZONE VIEW -->
         <section id="view-initial" class="w-full flex flex-col items-center text-center space-y-8 animate-fade-in my-auto">
-            <!-- Center Hero Title -->
             <div class="space-y-4 max-w-2xl">
                 <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
                     Начать загружать фотографии
@@ -137,7 +134,7 @@
                 </p>
             </div>
 
-            <!-- Start Button Zone -->
+            <!-- Start Button Container -->
             <div id="start-btn-container" class="w-full flex justify-center">
                 <button id="start-btn" onclick="revealDropzone()" class="purple-btn text-white px-10 py-5 rounded-2xl font-bold text-lg flex items-center gap-3 transition-all transform hover:scale-105">
                     <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
@@ -145,7 +142,7 @@
                 </button>
             </div>
 
-            <!-- Square Upload Dropzone (Replaces Start Button on click) -->
+            <!-- Square Upload Dropzone (Replaces Start Button) -->
             <div id="dropzone-wrapper" class="w-full max-w-md hidden pt-2 transition-all duration-500">
                 <div id="dropzone" onclick="triggerFilePicker()" class="w-full aspect-square purple-glass rounded-3xl border-2 border-dashed border-brand-500/50 hover:border-brand-400 flex flex-col items-center justify-center p-6 text-center cursor-pointer group hover:bg-purplecard/70 transition-all shadow-2xl relative">
                     <input type="file" id="file-input" multiple accept="image/*" class="hidden" onchange="handleFileSelect(event)">
@@ -176,7 +173,7 @@
             </div>
         </section>
 
-        <!-- VIEW 3: ALBUM MENU (REVIEW & UPLOAD) -->
+        <!-- VIEW 3: ALBUM MENU -->
         <section id="view-album-menu" class="hidden w-full max-w-5xl space-y-8 animate-fade-in">
             <div class="text-center space-y-2">
                 <h2 class="text-3xl font-extrabold text-white">Меню количества фото</h2>
@@ -186,10 +183,9 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                <!-- Left Column: Primary Action Button & Controls (Wider & Distinct) -->
+                <!-- Left Action Box -->
                 <div class="md:col-span-5 purple-glass p-7 rounded-3xl space-y-6 border border-brand-500/30 shadow-2xl">
                     <div class="space-y-4">
-                        <!-- Main Dynamic Button -->
                         <button id="main-upload-btn" onclick="publishAlbum()" class="w-full purple-btn text-white py-4 px-5 rounded-2xl font-bold text-base flex items-center justify-center gap-3 text-center">
                             <i class="fa-solid fa-link text-lg"></i>
                             <span id="main-btn-text">Сгенерировать ссылку на фото</span>
@@ -208,64 +204,74 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Thumbnail Previews Grid -->
+                <!-- Right Thumbnails & Additional Dropzone Grid -->
                 <div class="md:col-span-7 space-y-4">
                     <div id="thumbnails-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        <!-- Dynamic Thumbnails inserted here -->
+                        <!-- Dynamic Thumbnails -->
                     </div>
 
-                    <!-- Add More Photos Button / Zone (if total < 5) -->
+                    <!-- Add More Photos Dropzone Button -->
                     <div id="add-more-container" class="pt-2">
-                        <button onclick="triggerFilePicker()" class="w-full py-4 rounded-2xl border-2 border-dashed border-brand-500/40 hover:border-brand-400 bg-purplecard/40 hover:bg-purplecard/80 text-brand-300 font-semibold text-sm flex items-center justify-center gap-2 transition-all">
+                        <div id="add-more-dropzone" onclick="triggerFilePicker()" class="w-full py-5 rounded-2xl border-2 border-dashed border-brand-500/40 hover:border-brand-400 bg-purplecard/40 hover:bg-purplecard/80 text-brand-300 font-semibold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer">
                             <i class="fa-solid fa-plus-circle text-lg"></i>
                             <span>Загрузить ещё фотки (до 5 шт.)</span>
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- VIEW 4: FINAL SHAREABLE VIEWER -->
+        <!-- VIEW 4: PUBLIC SHAREABLE VIEWER PAGE -->
         <section id="view-final-viewer" class="hidden w-full max-w-4xl space-y-8 animate-fade-in">
             <div class="purple-glass p-6 sm:p-8 rounded-3xl border border-brand-500/30 space-y-6">
-                <!-- Top Info Bar -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-500/20 pb-4">
                     <div>
                         <h2 class="text-2xl font-extrabold text-white">Загруженные фото</h2>
                         <p id="viewer-subtext" class="text-xs text-purple-300/70 mt-1">Ссылка создана и готова к отправке</p>
                     </div>
                     <button onclick="resetToHome()" class="purple-btn text-white px-5 py-2.5 rounded-xl text-xs font-bold">
-                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Загрузить ещё
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Загрузить еще
                     </button>
                 </div>
 
-                <!-- Link Copy Bar -->
                 <div class="space-y-2">
                     <label class="block text-xs font-bold text-brand-300 uppercase tracking-wider">Ссылка:</label>
                     <div class="flex gap-2">
                         <input type="text" id="share-link-input" readonly class="w-full bg-purplebg text-xs text-purple-100 font-mono px-4 py-3 rounded-xl border border-brand-500/30 focus:outline-none">
-                        <button onclick="copyShareLink()" class="purple-btn text-white px-5 py-3 rounded-xl text-xs font-bold flex items-center gap-2">
+                        <button onclick="copyShareLink()" class="purple-btn text-white px-5 py-3 rounded-xl text-xs font-bold flex items-center gap-2 shrink-0">
                             <i class="fa-regular fa-copy"></i>
                             <span>Копировать</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Photos Showcase Grid -->
                 <div id="viewer-photos-container" class="space-y-6 pt-4">
-                    <!-- Dynamic viewer photos injected here -->
+                    <!-- Public Photos View Injected Here -->
                 </div>
             </div>
         </section>
 
     </main>
 
+    <div id="limit-error-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-rose-950/90 border border-rose-500 text-rose-100 px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-semibold backdrop-blur-md">
+            <i class="fa-solid fa-circle-exclamation text-rose-400 text-xl"></i>
+            <span id="error-toast-text">Лимит загрузки фото в один альбом - 5 шт.!</span>
+        </div>
+    </div>
+
+    <div id="success-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-purplecard/90 border border-brand-400 text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-semibold backdrop-blur-md">
+            <i class="fa-solid fa-circle-check text-brand-400 text-xl"></i>
+            <span id="success-toast-text">Скопировано!</span>
+        </div>
+    </div>
+
     <script>
-        // State variables
-        let uploadedPhotos = []; // Array of base64 photo strings
+        let uploadedPhotos = [];
         const MAX_PHOTOS = 5;
 
-        // Initialize IndexedDB to handle larger albums
+        // IndexedDB Storage Initialization
         let db = null;
         function initDB() {
             return new Promise((resolve) => {
@@ -305,7 +311,6 @@
             });
         }
 
-        // View Management
         function showView(viewId) {
             ['view-initial', 'view-loading', 'view-album-menu', 'view-final-viewer'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
@@ -324,46 +329,81 @@
             document.getElementById('file-input').click();
         }
 
-        // Dropzone Drag & Drop Setup
-        const dropzone = document.getElementById('dropzone');
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropzone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropzone.classList.add('border-brand-400', 'bg-purplecard/90');
+        // Setup Drag and Drop logic for both Main Dropzone and Add More Dropzone
+        function setupDropzoneEvents(element) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                element.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    element.classList.add('border-brand-400', 'bg-purplecard/90');
+                });
             });
-        });
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropzone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropzone.classList.remove('border-brand-400', 'bg-purplecard/90');
+            ['dragleave', 'drop'].forEach(eventName => {
+                element.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    element.classList.remove('border-brand-400', 'bg-purplecard/90');
+                });
             });
-        });
 
-        dropzone.addEventListener('drop', (e) => {
-            const files = e.dataTransfer.files;
-            if (files.length) processFiles(Array.from(files));
-        });
+            element.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const files = Array.from(e.dataTransfer.files);
+                
+                // If dropping directly an image element from Google / Web browser
+                const htmlData = e.dataTransfer.getData('text/html');
+                if (files.length > 0) {
+                    processFiles(files);
+                } else if (htmlData) {
+                    const match = htmlData.match(/src=["'](.*?)["']/);
+                    if (match && match[1]) {
+                        processUrlImage(match[1]);
+                    }
+                }
+            });
+        }
+
+        setupDropzoneEvents(document.getElementById('dropzone'));
+        setupDropzoneEvents(document.getElementById('add-more-dropzone'));
 
         function handleFileSelect(e) {
             const files = e.target.files;
             if (files.length) processFiles(Array.from(files));
         }
 
-        // File Processing and Limit Validation
+        function processUrlImage(url) {
+            if (uploadedPhotos.length >= MAX_PHOTOS) {
+                showLimitErrorToast("Лимит загрузки фото в один альбом - 5 шт.!");
+                return;
+            }
+            showView('view-loading');
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                uploadedPhotos.push(canvas.toDataURL('image/jpeg'));
+                updateAlbumMenuView();
+                showView('view-album-menu');
+            };
+            img.onerror = () => {
+                showLimitErrorToast("Не удалось загрузить фото по этой ссылке.");
+                showView('view-album-menu');
+            };
+            img.src = url;
+        }
+
         function processFiles(files) {
             const validImageFiles = files.filter(f => f.type.startsWith('image/'));
-
             if (!validImageFiles.length) return;
 
-            // Check if adding these files exceeds the limit of 5
             if (uploadedPhotos.length + validImageFiles.length > MAX_PHOTOS) {
                 showLimitErrorToast("Лимит загрузки фото в один альбом - 5 шт.!");
                 return;
             }
 
-            // Show loading state
             showView('view-loading');
 
             let processedCount = 0;
@@ -372,19 +412,17 @@
                 reader.onload = (e) => {
                     uploadedPhotos.push(e.target.result);
                     processedCount++;
-                    
                     if (processedCount === validImageFiles.length) {
                         setTimeout(() => {
                             updateAlbumMenuView();
                             showView('view-album-menu');
-                        }, 600);
+                        }, 500);
                     }
                 };
                 reader.readAsDataURL(file);
             });
         }
 
-        // Update Album Menu state, photos list and button label
         function updateAlbumMenuView() {
             const countBadge = document.getElementById('photo-count-badge');
             const mainBtnText = document.getElementById('main-btn-text');
@@ -393,14 +431,12 @@
 
             countBadge.innerText = uploadedPhotos.length;
 
-            // Dynamic Button Text Rule: 1 photo -> "Сгенерировать ссылку на фото", >=2 -> "Сгенерировать ссылку на альбом"
             if (uploadedPhotos.length === 1) {
                 mainBtnText.innerText = "Сгенерировать ссылку на фото";
             } else {
                 mainBtnText.innerText = "Сгенерировать ссылку на альбом";
             }
 
-            // Render Thumbnails
             grid.innerHTML = '';
             uploadedPhotos.forEach((photoData, index) => {
                 const card = document.createElement('div');
@@ -419,7 +455,6 @@
                 grid.appendChild(card);
             });
 
-            // Toggle Add More button if max limit reached
             if (uploadedPhotos.length >= MAX_PHOTOS) {
                 addMoreContainer.classList.add('hidden');
             } else {
@@ -436,12 +471,10 @@
             }
         }
 
-        // Publish Album and Generate Hash URL
         async function publishAlbum() {
             if (!uploadedPhotos.length) return;
 
             showView('view-loading');
-
             const albumId = 'album_' + Math.random().toString(36).substring(2, 9);
             await saveAlbumToDB(albumId, uploadedPhotos);
 
@@ -452,7 +485,6 @@
             }, 500);
         }
 
-        // Load Final Shareable Viewer Page
         function loadViewerPage(shareUrl, photos) {
             document.getElementById('share-link-input').value = shareUrl;
             document.getElementById('viewer-subtext').innerText = photos.length > 1 ? `В альбоме: ${photos.length} фото` : `В альбоме: 1 фото`;
@@ -481,7 +513,6 @@
             showView('view-final-viewer');
         }
 
-        // Copy Share Link to Clipboard
         function copyShareLink() {
             const input = document.getElementById('share-link-input');
             input.select();
@@ -489,7 +520,6 @@
             showSuccessToast('Ссылка скопирована!');
         }
 
-        // Toast Messages
         function showLimitErrorToast(msg) {
             const toast = document.getElementById('limit-error-toast');
             document.getElementById('error-toast-text').innerText = msg;
@@ -523,7 +553,6 @@
             showView('view-initial');
         }
 
-        // Routing check on load (e.g. visiting #view?id=123)
         async function checkRoute() {
             const hash = window.location.hash;
             if (hash.includes('view?id=')) {
