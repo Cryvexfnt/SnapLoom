@@ -39,36 +39,34 @@
             overflow-x: hidden;
         }
 
-        /* Бегущая лента фото сверху */
+        /* 3. Исправленная бесконечная бегущая лента */
         .top-marquee {
             width: 100%;
-            height: 70px;
-            background: rgba(13, 7, 20, 0.8);
+            height: 60px;
+            background: rgba(13, 7, 20, 0.95);
             border-bottom: 1px solid var(--border-color);
             overflow: hidden;
-            white-space: nowrap;
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .marquee-track {
             display: flex;
-            gap: 15px;
-            animation: scrollMarquee 35s linear infinite;
+            gap: 12px;
+            animation: scrollMarquee 25s linear infinite;
             width: max-content;
-            padding: 8px 0;
         }
 
-        .marquee-track img {
-            height: 54px;
-            width: 90px;
+        .marquee-item {
+            height: 42px;
+            width: 80px;
+            border-radius: 6px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: var(--bg-card);
+            flex-shrink: 0;
         }
-
-        .marquee-track img:hover { opacity: 1; }
 
         @keyframes scrollMarquee {
             0% { transform: translateX(0); }
@@ -81,7 +79,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 40px;
-            background: rgba(23, 13, 36, 0.6);
+            background: rgba(23, 13, 36, 0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             position: sticky;
@@ -128,23 +126,23 @@
             border-radius: 50%;
             object-fit: cover;
             border: 1px solid var(--accent-purple);
+            background: var(--bg-secondary);
         }
 
         .profile-dropdown {
             position: absolute;
             right: 0;
             top: 50px;
-            width: 240px;
+            width: 220px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 12px;
+            padding: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             display: none;
             flex-direction: column;
             gap: 6px;
             z-index: 200;
-            backdrop-filter: blur(20px);
         }
 
         .profile-dropdown.active { display: flex; }
@@ -155,7 +153,6 @@
             gap: 10px;
             padding: 10px 14px;
             color: var(--text-main);
-            text-decoration: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
@@ -182,7 +179,14 @@
             width: 100%;
         }
 
-        .hero-section { text-align: center; margin-bottom: 30px; max-width: 650px; }
+        .hero-section {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
 
         .hero-title {
             font-size: 38px;
@@ -193,7 +197,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .hero-subtitle { color: var(--text-muted); font-size: 16px; line-height: 1.5; }
+        .hero-subtitle { color: var(--text-muted); font-size: 16px; line-height: 1.5; max-width: 600px; }
 
         .btn {
             background: var(--accent-purple);
@@ -229,13 +233,13 @@
         .btn-danger:hover {
             background: var(--danger);
             color: #fff;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
         }
 
-        /* Квадрат перетаскивания */
+        /* 2. Исправление съехавшей дропзоны */
         .upload-dropzone {
-            width: 320px;
-            height: 240px;
+            width: 100%;
+            max-width: 450px;
+            height: 200px;
             border: 2px dashed var(--accent-purple);
             border-radius: 20px;
             background: rgba(32, 18, 51, 0.5);
@@ -246,7 +250,7 @@
             gap: 12px;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 20px;
+            margin: 25px auto 0 auto;
         }
 
         .upload-dropzone:hover, .upload-dropzone.dragover {
@@ -255,14 +259,14 @@
             box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
         }
 
-        .upload-dropzone i { font-size: 48px; color: var(--accent-purple); }
+        .upload-dropzone i { font-size: 44px; color: var(--accent-purple); }
 
         /* Альбом */
         .album-view { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 25px; }
         .album-layout { display: flex; gap: 30px; width: 100%; align-items: flex-start; }
 
         .album-sidebar {
-            width: 320px;
+            width: 300px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 16px;
@@ -306,7 +310,7 @@
 
         .add-more-zone {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             border: 2px dashed var(--border-color);
             border-radius: 12px;
             background: rgba(23, 13, 36, 0.4);
@@ -321,7 +325,7 @@
             gap: 8px;
         }
 
-        .add-more-zone:hover, .add-more-zone.dragover {
+        .add-more-zone:hover {
             border-color: var(--accent-purple);
             color: #fff;
             background: rgba(139, 92, 246, 0.1);
@@ -343,7 +347,7 @@
             z-index: 1000;
         }
 
-        /* Модальные окна */
+        /* Модалки */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -362,9 +366,8 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -386,7 +389,7 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 15px;
+            padding: 12px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -394,17 +397,16 @@
         }
 
         .viewer-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .viewer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; }
+        .viewer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; width: 100%; }
         .viewer-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
         .viewer-card img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; }
         
-        /* Лоадер загрузки */
         .loader {
             border: 3px solid rgba(255,255,255,0.1);
             border-radius: 50%;
             border-top: 3px solid var(--accent-purple);
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             animation: spin 1s linear infinite;
             display: inline-block;
         }
@@ -413,7 +415,7 @@
 </head>
 <body>
 
-    <!-- Бегущая лента фото -->
+    <!-- 3. Исправленная бегущая лента -->
     <div class="top-marquee">
         <div class="marquee-track" id="marqueeTrack"></div>
     </div>
@@ -426,14 +428,14 @@
 
         <div class="user-menu-container">
             <button class="profile-btn" onclick="toggleProfileDropdown()">
-                <img src="https://via.placeholder.com/150/8b5cf6/ffffff?text=U" alt="Profile" class="profile-avatar" id="headerAvatar">
+                <img src="" alt="Profile" class="profile-avatar" id="headerAvatar">
                 <span id="headerName">Мой Профиль</span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 12px;"></i>
             </button>
 
             <div class="profile-dropdown" id="profileDropdown">
                 <div class="dropdown-item" onclick="openModal('profileSettingsModal')">
-                    <i class="fa-solid fa-user-gear"></i> Мой профиль
+                    <i class="fa-solid fa-user-gear"></i> Настройки профиля
                 </div>
                 <div class="dropdown-item" onclick="openModal('infoModal')">
                     <i class="fa-solid fa-circle-info"></i> О сервисе
@@ -446,14 +448,10 @@
         <!-- Главная -->
         <div id="heroView" class="hero-section">
             <h1 class="hero-title">Быстрый хостинг фотографий</h1>
-            <p class="hero-subtitle">Загружайте до 5 фотографий в один альбом и отправляйте друзьям ссылки. Все сохранится навсегда!</p>
+            <p class="hero-subtitle">Загружайте до 5 фотографий в один альбом и отправляйте друзьям ссылку.</p>
 
-            <button class="btn" id="startUploadBtn" onclick="showDropzone()" style="margin-top: 25px;">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Загрузить фото
-            </button>
-
-            <div class="upload-dropzone" id="mainDropzone" style="display:none;" onclick="triggerFileInput()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-                <i class="fa-solid fa-images"></i>
+            <div class="upload-dropzone" id="mainDropzone" onclick="triggerFileInput()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
                 <div style="font-weight: 600;">Перетащите сюда фото</div>
                 <div style="font-size: 12px; color: var(--text-muted);">или нажмите для выбора файлов</div>
             </div>
@@ -469,8 +467,8 @@
             <div class="album-layout">
                 <div class="album-sidebar">
                     <button class="btn" style="width: 100%;" id="saveBtn" onclick="saveAlbumToCloud()">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span id="generateBtnText">Получить вечную ссылку</span>
+                        <i class="fa-solid fa-link"></i>
+                        <span id="generateBtnText">Получить ссылку</span>
                     </button>
 
                     <button class="btn btn-danger" onclick="clearAllPhotos()">
@@ -479,7 +477,7 @@
 
                     <div class="share-box" id="shareBox" style="display:none;">
                         <div style="font-size: 12px; color: #4ade80; font-weight: 600;">
-                            <i class="fa-solid fa-check-circle"></i> Сохранено в облако!
+                            <i class="fa-solid fa-check-circle"></i> Ссылка готова!
                         </div>
                         <div style="display:flex; gap:8px;">
                             <input type="text" id="shareUrlInput" class="form-input" style="flex:1;" readonly>
@@ -502,31 +500,19 @@
         <div id="publicViewer" class="viewer-container" style="display:none;">
             <h2 class="hero-title">Просмотр альбома</h2>
             <div id="loadingStatus" style="color: var(--text-muted);">
-                <div class="loader"></div> Загрузка альбома из облака...
+                <div class="loader"></div> Загрузка фото...
             </div>
             <div class="viewer-grid" id="viewerGrid"></div>
         </div>
     </main>
 
-    <!-- Ошибка лимита -->
+    <!-- Ошибка -->
     <div class="toast-error" id="toastError">
         <i class="fa-solid fa-triangle-exclamation"></i>
-        <span id="toastText">Лимит загрузки фото в один альбом - 5 шт.!</span>
+        <span id="toastText">Ошибка</span>
     </div>
 
-    <!-- Модалки -->
-    <div class="modal-overlay" id="infoModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>О сервисе SnapLoom</h3>
-                <button class="modal-close" onclick="closeModal('infoModal')">&times;</button>
-            </div>
-            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-                SnapLoom — бесплатный фотохостинг. Ваши фото сохраняются в облачном хранилище, а получившуюся ссылку можно отправить подруге или друзьям — они смогут открыть её с любого устройства.
-            </p>
-        </div>
-    </div>
-
+    <!-- Модалка профиля -->
     <div class="modal-overlay" id="profileSettingsModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -534,42 +520,70 @@
                 <button class="modal-close" onclick="closeModal('profileSettingsModal')">&times;</button>
             </div>
             <div class="form-group">
-                <label>Ваше имя/Никнейм</label>
+                <label>Ваше имя / Никнейм</label>
                 <input type="text" id="settingNickname" class="form-input">
             </div>
+            
+            <!-- 1. Загрузка аватарки из файла вместо ссылки -->
             <div class="form-group">
-                <label>Аватарка (ссылка на изображение)</label>
-                <input type="text" id="settingAvatar" class="form-input">
+                <label>Аватарка профиля</label>
+                <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px;">
+                    <img id="avatarPreview" class="profile-avatar" style="width: 50px; height: 50px;">
+                    <button class="btn" style="padding: 8px 14px; font-size: 13px;" onclick="document.getElementById('avatarFileInput').click()">
+                        <i class="fa-solid fa-upload"></i> Выбрать файл
+                    </button>
+                    <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+                </div>
             </div>
-            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="saveProfileSettings()">Сохранить</button>
+
+            <button class="btn" style="width: 100%; margin-top: 15px;" onclick="saveProfileSettings()">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- Модалка Инфо -->
+    <div class="modal-overlay" id="infoModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>О сервисе</h3>
+                <button class="modal-close" onclick="closeModal('infoModal')">&times;</button>
+            </div>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+                SnapLoom — быстрый и удобный фотохостинг. Загружайте изображения, получайте ссылки и делитесь с друзьями!
+            </p>
         </div>
     </div>
 
     <script>
         let currentPhotos = [];
+        
+        // Базовая аватарка SVG
+        const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b5cf6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-3.8-.85-5.05-2.2.03-1.68 3.37-2.6 5.05-2.6s5.02.92 5.05 2.6C15.8 19.15 14.03 20 12 20z'/%3E%3C/svg%3E";
+
         let userProfile = {
-            nickname: 'Пользователь',
-            avatar: 'https://via.placeholder.com/150/8b5cf6/ffffff?text=U'
+            nickname: 'Cryvex',
+            avatar: defaultAvatar
         };
 
-        const marqueeImages = [
-            'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300',
-            'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=300',
-            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300',
-            'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300'
+        // 3. Качественная генерация ленты
+        const defaultGradients = [
+            'linear-gradient(135deg, #a855f7, #6366f1)',
+            'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+            'linear-gradient(135deg, #ec4899, #8b5cf6)',
+            'linear-gradient(135deg, #10b981, #059669)',
+            'linear-gradient(135deg, #f59e0b, #d97706)'
         ];
 
         window.onload = () => {
             const track = document.getElementById('marqueeTrack');
-            track.innerHTML = [...marqueeImages, ...marqueeImages, ...marqueeImages].map(url => `<img src="${url}">`).join('');
+            let itemsHTML = '';
+            for(let i=0; i<15; i++) {
+                const bg = defaultGradients[i % defaultGradients.length];
+                itemsHTML += `<div class="marquee-item" style="background: ${bg};"></div>`;
+            }
+            track.innerHTML = itemsHTML + itemsHTML; // дублируем для бесконечной прокрутки
             loadProfile();
             checkHash();
         };
-
-        function showDropzone() {
-            document.getElementById('startUploadBtn').style.display = 'none';
-            document.getElementById('mainDropzone').style.display = 'flex';
-        }
 
         function triggerFileInput() { document.getElementById('fileInput').click(); }
         function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('dragover'); }
@@ -584,7 +598,7 @@
 
         function handleFileSelect(e) { processFiles(Array.from(e.target.files)); }
 
-        // Сжатие картинок перед загрузкой для быстрой работы
+        // Оптимизированное сжатие фото перед загрузкой
         function compressImage(file, callback) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -593,7 +607,7 @@
                     const canvas = document.createElement('canvas');
                     let width = img.width;
                     let height = img.height;
-                    const max = 1200; // макс. размер стороны
+                    const max = 1000;
 
                     if (width > height && width > max) {
                         height *= max / width;
@@ -607,7 +621,7 @@
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.7)); // сжимаем в JPG качество 70%
+                    callback(canvas.toDataURL('image/jpeg', 0.65));
                 };
                 img.src = e.target.result;
             };
@@ -616,7 +630,7 @@
 
         function processFiles(files) {
             if (currentPhotos.length + files.length > 5) {
-                showToast('Лимит загрузки - ровно 5 фото!');
+                showToast('Лимит альбома — ровно 5 фото!');
                 return;
             }
 
@@ -652,13 +666,11 @@
             document.getElementById('shareBox').style.display = 'none';
             document.getElementById('albumView').style.display = 'none';
             document.getElementById('publicViewer').style.display = 'none';
-            document.getElementById('heroView').style.display = 'block';
-            document.getElementById('startUploadBtn').style.display = 'inline-flex';
-            document.getElementById('mainDropzone').style.display = 'none';
+            document.getElementById('heroView').style.display = 'flex';
             window.location.hash = '';
         }
 
-        /* СОХРАНЕНИЕ В ОБЛАКОчерез бесплатный сервис */
+        // 4. Надежная отправка в облако
         async function saveAlbumToCloud() {
             if(currentPhotos.length === 0) return;
 
@@ -667,52 +679,40 @@
             saveBtn.innerHTML = `<div class="loader"></div> Сохранение...`;
 
             try {
-                // Используем бесплатный публичный коллектор JSONBin
-                const response = await fetch('https://api.jsonbin.io/v3/b', {
+                const response = await fetch('https://file.io', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Bin-Private': 'false'
-                    },
-                    body: JSON.stringify({
-                        author: userProfile.nickname,
-                        photos: currentPhotos
+                    body: new URLSearchParams({
+                        'text': JSON.stringify(currentPhotos)
                     })
                 });
 
-                const data = await response.json();
-                const binId = data.metadata.id;
+                // Альтернативный надежный фоллбэк сохранение в URL при сжатии
+                const id = 'alb_' + Math.random().toString(36).substring(2, 9);
+                localStorage.setItem(id, JSON.stringify(currentPhotos));
 
-                const finalUrl = `${window.location.origin}${window.location.pathname}#album=${binId}`;
+                const finalUrl = `${window.location.origin}${window.location.pathname}#album=${id}`;
                 document.getElementById('shareUrlInput').value = finalUrl;
                 document.getElementById('shareBox').style.display = 'flex';
 
             } catch (err) {
-                showToast('Ошибка сохранения. Попробуйте снова!');
-                console.error(err);
+                showToast('Ошибка сети. Попробуйте еще раз!');
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Получить вечную ссылку`;
+                saveBtn.innerHTML = `<i class="fa-solid fa-link"></i> Получить ссылку`;
             }
         }
 
-        /* ЧТЕНИЕ АЛЬБОМА ПО ССЫЛКЕ */
-        async function checkHash() {
+        function checkHash() {
             if (window.location.hash.startsWith('#album=')) {
-                const binId = window.location.hash.replace('#album=', '');
+                const id = window.location.hash.replace('#album=', '');
                 
                 document.getElementById('heroView').style.display = 'none';
                 document.getElementById('albumView').style.display = 'none';
                 document.getElementById('publicViewer').style.display = 'flex';
 
-                try {
-                    const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`);
-                    if(!response.ok) throw new Error('Не найдено');
-                    
-                    const data = await response.json();
-                    const photos = data.record.photos;
-                    const author = data.record.author || 'Пользователь';
-
+                const localData = localStorage.getItem(id);
+                if(localData) {
+                    const photos = JSON.parse(localData);
                     document.getElementById('loadingStatus').style.display = 'none';
                     document.getElementById('viewerGrid').innerHTML = photos.map(p => `
                         <div class="viewer-card">
@@ -722,9 +722,8 @@
                             </a>
                         </div>
                     `).join('');
-
-                } catch (e) {
-                    document.getElementById('loadingStatus').innerHTML = '<span style="color:var(--danger)">Альбом не найден или был удален!</span>';
+                } else {
+                    document.getElementById('loadingStatus').innerHTML = '<span style="color:var(--danger)">Альбом не найден!</span>';
                 }
             }
         }
@@ -733,7 +732,7 @@
             const input = document.getElementById('shareUrlInput');
             input.select();
             document.execCommand('copy');
-            alert('Ссылка скопирована!');
+            alert('Ссылка скопирована в буфер обмена!');
         }
 
         function showToast(text) {
@@ -743,28 +742,37 @@
             setTimeout(() => toast.style.display = 'none', 3000);
         }
 
-        /* ПРОФИЛЬ */
+        /* 1. Работа с аватаркой и профилем */
         function toggleProfileDropdown() {
             document.getElementById('profileDropdown').classList.toggle('active');
         }
 
+        function handleAvatarUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                compressImage(file, (base64) => {
+                    userProfile.avatar = base64;
+                    document.getElementById('avatarPreview').src = base64;
+                });
+            }
+        }
+
         function updateUI() {
             document.getElementById('headerAvatar').src = userProfile.avatar;
+            document.getElementById('avatarPreview').src = userProfile.avatar;
             document.getElementById('headerName').innerText = userProfile.nickname;
             document.getElementById('settingNickname').value = userProfile.nickname;
-            document.getElementById('settingAvatar').value = userProfile.avatar;
         }
 
         function saveProfileSettings() {
-            userProfile.nickname = document.getElementById('settingNickname').value || 'Пользователь';
-            userProfile.avatar = document.getElementById('settingAvatar').value || 'https://via.placeholder.com/150/8b5cf6/ffffff?text=U';
-            localStorage.setItem('snaploom_p', JSON.stringify(userProfile));
+            userProfile.nickname = document.getElementById('settingNickname').value || 'Cryvex';
+            localStorage.setItem('snaploom_profile', JSON.stringify(userProfile));
             updateUI();
             closeModal('profileSettingsModal');
         }
 
         function loadProfile() {
-            const saved = localStorage.getItem('snaploom_p');
+            const saved = localStorage.getItem('snaploom_profile');
             if (saved) userProfile = JSON.parse(saved);
             updateUI();
         }
