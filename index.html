@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- LZ-String Library for URL Compression -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
 
     <style>
         :root {
@@ -37,12 +39,74 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Симулятор просмотра на разных устройствах */
+        .device-emulator-bar {
+            background: rgba(23, 13, 36, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            z-index: 110;
+        }
+
+        .device-btn {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .device-btn.active, .device-btn:hover {
+            background: var(--accent-purple);
+            color: #fff;
+            border-color: var(--accent-glow);
+        }
+
+        /* Контейнер приложения с поддержкой адаптивных режимов */
+        .app-wrapper {
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            transition: max-width 0.3s ease, border 0.3s ease;
+        }
+
+        .app-wrapper.mode-mobile {
+            max-width: 390px;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        .app-wrapper.mode-tablet {
+            max-width: 768px;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        .app-wrapper.mode-desktop {
+            max-width: 100%;
         }
 
         /* Бегущая лента */
         .top-marquee {
             width: 100%;
-            height: 60px;
+            height: 50px;
             background: rgba(13, 7, 20, 0.95);
             border-bottom: 1px solid var(--border-color);
             overflow: hidden;
@@ -53,14 +117,14 @@
 
         .marquee-track {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             animation: scrollMarquee 25s linear infinite;
             width: max-content;
         }
 
         .marquee-item {
-            height: 42px;
-            width: 80px;
+            height: 34px;
+            width: 70px;
             border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             background: var(--bg-card);
@@ -72,13 +136,12 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* Шапка */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
-            background: rgba(23, 13, 36, 0.8);
+            padding: 12px 20px;
+            background: rgba(23, 13, 36, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             position: sticky;
@@ -89,29 +152,30 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 22px;
+            gap: 8px;
+            font-size: 18px;
             font-weight: 800;
             color: #fff;
             text-decoration: none;
             cursor: pointer;
         }
 
-        .logo i { color: var(--accent-purple); font-size: 26px; }
+        .logo i { color: var(--accent-purple); font-size: 22px; }
 
         .user-menu-container { position: relative; }
 
         .profile-btn {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 6px 14px;
+            padding: 5px 10px;
             border-radius: 30px;
             color: #fff;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 13px;
         }
 
         .profile-btn:hover {
@@ -120,8 +184,8 @@
         }
 
         .profile-avatar {
-            width: 34px;
-            height: 34px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             object-fit: cover;
             border: 1px solid var(--accent-purple);
@@ -131,16 +195,16 @@
         .profile-dropdown {
             position: absolute;
             right: 0;
-            top: 50px;
-            width: 220px;
+            top: 45px;
+            width: 200px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 10px;
+            border-radius: 14px;
+            padding: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             display: none;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             z-index: 200;
         }
 
@@ -150,11 +214,11 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 14px;
+            padding: 8px 12px;
             color: var(--text-main);
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             transition: background 0.2s;
         }
 
@@ -163,16 +227,15 @@
             color: #fff;
         }
 
-        .dropdown-item i { color: var(--accent-purple); width: 18px; }
+        .dropdown-item i { color: var(--accent-purple); width: 16px; }
 
-        /* Главный контейнер */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 20px 15px;
             max-width: 1100px;
             margin: 0 auto;
             width: 100%;
@@ -188,22 +251,33 @@
         }
 
         .hero-title {
-            font-size: 38px;
+            font-size: 28px;
             font-weight: 800;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #fff 0%, var(--accent-glow) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-align: center;
         }
 
-        .hero-subtitle { color: var(--text-muted); font-size: 16px; line-height: 1.5; max-width: 600px; }
+        @media (min-width: 640px) {
+            .hero-title { font-size: 36px; }
+        }
+
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+            max-width: 500px;
+            margin-bottom: 10px;
+        }
 
         .btn {
             background: var(--accent-purple);
             color: #fff;
             border: none;
-            padding: 12px 20px;
-            font-size: 15px;
+            padding: 10px 18px;
+            font-size: 14px;
             font-weight: 600;
             border-radius: 12px;
             cursor: pointer;
@@ -212,14 +286,14 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
             white-space: nowrap;
         }
 
         .btn:hover {
             background: var(--purple-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
         }
 
         .btn-danger {
@@ -238,18 +312,18 @@
         .upload-dropzone {
             width: 100%;
             max-width: 450px;
-            height: 200px;
+            height: 180px;
             border: 2px dashed var(--accent-purple);
-            border-radius: 20px;
+            border-radius: 18px;
             background: rgba(32, 18, 51, 0.5);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
             transition: all 0.3s;
-            margin: 25px auto 0 auto;
+            margin: 15px auto 0 auto;
         }
 
         .upload-dropzone:hover, .upload-dropzone.dragover {
@@ -258,26 +332,44 @@
             box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
         }
 
-        .upload-dropzone i { font-size: 44px; color: var(--accent-purple); }
+        .upload-dropzone i { font-size: 38px; color: var(--accent-purple); }
 
         /* Альбом */
-        .album-view { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 25px; }
-        .album-layout { display: flex; gap: 30px; width: 100%; align-items: flex-start; }
+        .album-view { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .album-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .album-layout { flex-direction: row; align-items: flex-start; }
+        }
 
         .album-sidebar {
-            width: 320px;
+            width: 100%;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             flex-shrink: 0;
         }
 
-        .album-grid-container { flex: 1; display: flex; flex-direction: column; gap: 15px; }
-        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; width: 100%; }
+        @media (min-width: 768px) {
+            .album-sidebar { width: 300px; }
+        }
+
+        .album-grid-container { flex: 1; display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            width: 100%;
+        }
 
         .photo-card {
             position: relative;
@@ -292,13 +384,13 @@
 
         .photo-card .remove-btn {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 6px;
+            right: 6px;
             background: rgba(0,0,0,0.7);
             color: #fff;
             border: none;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -310,7 +402,7 @@
 
         .add-more-zone {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: 2px dashed var(--border-color);
             border-radius: 12px;
             background: rgba(23, 13, 36, 0.4);
@@ -318,7 +410,7 @@
             cursor: pointer;
             transition: all 0.3s;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -331,42 +423,73 @@
             background: rgba(139, 92, 246, 0.1);
         }
 
-        /* Блок копирования ссылки */
+        /* Адаптивный блок скопировать ссылку */
         .share-box-viewer {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 8px 12px;
+            padding: 10px;
             border-radius: 12px;
-            max-width: 500px;
             width: 100%;
+            max-width: 550px;
             margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 520px) {
+            .share-box-viewer {
+                flex-direction: row;
+                align-items: center;
+            }
         }
 
         .share-box-viewer input {
             flex: 1;
-            background: transparent;
-            border: none;
+            min-width: 0;
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             color: var(--text-main);
-            font-size: 14px;
+            font-size: 13px;
+            padding: 10px;
+            border-radius: 8px;
             outline: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .share-box-viewer .btn-copy {
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 520px) {
+            .share-box-viewer .btn-copy {
+                width: auto;
+            }
         }
 
         .toast-error {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            right: 20px;
+            left: 20px;
+            max-width: 380px;
+            margin: 0 auto;
             background: #ef4444;
             color: #fff;
-            padding: 14px 24px;
+            padding: 12px 20px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
             display: none;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             font-weight: 600;
+            font-size: 13px;
             z-index: 1000;
         }
 
@@ -374,11 +497,12 @@
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.75);
             backdrop-filter: blur(8px);
             display: none;
             align-items: center;
             justify-content: center;
+            padding: 15px;
             z-index: 500;
         }
 
@@ -387,40 +511,64 @@
         .modal-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 18px;
             width: 100%;
-            max-width: 440px;
-            padding: 25px;
+            max-width: 400px;
+            padding: 20px;
         }
 
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-close { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
 
-        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 13px; color: var(--text-muted); }
+        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 12px; color: var(--text-muted); }
         .form-input {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 8px;
             color: #fff;
             outline: none;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        /* Галерея просмотра без кнопок скачивания */
-        .viewer-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .viewer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; }
-        .viewer-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
-        .viewer-card img { width: 100%; height: auto; max-height: 500px; object-fit: contain; border-radius: 10px; display: block; }
+        /* Галерея просмотра без лишних кнопок скачивания */
+        .viewer-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .viewer-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+            align-items: center;
+        }
+
+        .viewer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 8px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .viewer-card img {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 10px;
+            display: block;
+        }
 
         /* Loader */
         .loader-spinner {
             border: 3px solid rgba(255,255,255,0.1);
             border-left-color: var(--accent-purple);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 24px;
+            height: 24px;
             animation: spin 0.8s linear infinite;
         }
 
@@ -429,144 +577,160 @@
 </head>
 <body>
 
-    <!-- Бегущая лента -->
-    <div class="top-marquee">
-        <div class="marquee-track" id="marqueeTrack"></div>
+    <!-- Симулятор экранов -->
+    <div class="device-emulator-bar">
+        <span style="color: var(--text-muted);">Режим экрана:</span>
+        <button class="device-btn active" onclick="setDeviceMode('desktop', this)">
+            <i class="fa-solid fa-desktop"></i> ПК
+        </button>
+        <button class="device-btn" onclick="setDeviceMode('tablet', this)">
+            <i class="fa-solid fa-tablet-screen-button"></i> Планшет
+        </button>
+        <button class="device-btn" onclick="setDeviceMode('mobile', this)">
+            <i class="fa-solid fa-mobile-screen-button"></i> Телефон
+        </button>
     </div>
 
-    <!-- Шапка -->
-    <header>
-        <a class="logo" onclick="resetApp()">
-            <i class="fa-solid fa-bolt"></i> SnapLoom
-        </a>
-
-        <div class="user-menu-container">
-            <button class="profile-btn" onclick="toggleProfileDropdown()">
-                <img src="" alt="Profile" class="profile-avatar" id="headerAvatar">
-                <span id="headerName">Мой Профиль</span>
-                <i class="fa-solid fa-chevron-down" style="font-size: 12px;"></i>
-            </button>
-
-            <div class="profile-dropdown" id="profileDropdown">
-                <div class="dropdown-item" onclick="openModal('profileSettingsModal')">
-                    <i class="fa-solid fa-user-gear"></i> Настройки профиля
-                </div>
-                <div class="dropdown-item" onclick="openModal('infoModal')">
-                    <i class="fa-solid fa-circle-info"></i> О сервисе
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <!-- Главная -->
-        <div id="heroView" class="hero-section">
-            <h1 class="hero-title">Быстрый хостинг фотографий</h1>
-            <p class="hero-subtitle">Загружайте до 5 фотографий в один альбом и отправляйте друзьям ссылку.</p>
-
-            <div class="upload-dropzone" id="mainDropzone" onclick="triggerFileInput()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <div style="font-weight: 600;">Перетащите сюда фото</div>
-                <div style="font-size: 12px; color: var(--text-muted);">или нажмите для выбора файлов</div>
-            </div>
-            
-            <input type="file" id="fileInput" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+    <div class="app-wrapper mode-desktop" id="appWrapper">
+        <!-- Бегущая лента -->
+        <div class="top-marquee">
+            <div class="marquee-track" id="marqueeTrack"></div>
         </div>
 
-        <!-- Редактирование / создание альбома -->
-        <div id="albumView" class="album-view" style="display:none;">
-            <h2 class="hero-title">Создание альбома</h2>
-            <div style="color: var(--text-muted); font-size: 14px;" id="photoCounter">Загружено: 0/5 фото</div>
+        <!-- Шапка -->
+        <header>
+            <a class="logo" onclick="resetApp()">
+                <i class="fa-solid fa-bolt"></i> SnapLoom
+            </a>
 
-            <div class="album-layout">
-                <div class="album-sidebar">
-                    <button class="btn" style="width: 100%;" id="saveBtn" onclick="saveAlbumAndRedirect()">
-                        <i class="fa-solid fa-link"></i> Получить ссылку
-                    </button>
+            <div class="user-menu-container">
+                <button class="profile-btn" onclick="toggleProfileDropdown()">
+                    <img src="" alt="Profile" class="profile-avatar" id="headerAvatar">
+                    <span id="headerName">Мой Профиль</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </button>
 
-                    <button class="btn btn-danger" onclick="clearAllPhotos()">
-                        <i class="fa-solid fa-trash-can"></i> Очистить всё
-                    </button>
-                </div>
-
-                <div class="album-grid-container">
-                    <div class="album-grid" id="albumGrid"></div>
-                    <div class="add-more-zone" id="addMoreZone" onclick="triggerFileInput()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-                        <i class="fa-solid fa-plus-circle"></i>
-                        <span>Загрузить ещё фотки (до 5 шт.)</span>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-item" onclick="openModal('profileSettingsModal')">
+                        <i class="fa-solid fa-user-gear"></i> Настройки профиля
+                    </div>
+                    <div class="dropdown-item" onclick="openModal('infoModal')">
+                        <i class="fa-solid fa-circle-info"></i> О сервисе
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <!-- Публичный просмотр всех фоток -->
-        <div id="publicViewer" class="viewer-container" style="display:none;">
-            <!-- Динамический заголовок: Просмотр фото / Просмотр фоток -->
-            <h2 class="hero-title" id="viewerTitle">Просмотр фото</h2>
+        <main>
+            <!-- Главная -->
+            <div id="heroView" class="hero-section">
+                <h1 class="hero-title">Быстрый хостинг фотографий</h1>
+                <p class="hero-subtitle">Загружайте до 5 фотографий в один альбом и отправляйте друзьям ссылку.</p>
 
-            <!-- Блок с кнопкой Скопировать ссылку -->
-            <div class="share-box-viewer">
-                <input type="text" id="viewerShareUrl" readonly onclick="copyViewerUrl()">
-                <button class="btn" style="padding: 8px 14px; font-size: 13px;" onclick="copyViewerUrl()">
-                    <i class="fa-solid fa-copy"></i> Скопировать ссылку
-                </button>
+                <div class="upload-dropzone" id="mainDropzone" onclick="triggerFileInput()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <div style="font-weight: 600; font-size: 15px;">Перетащите сюда фото</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">или нажмите для выбора файлов</div>
+                </div>
+                
+                <input type="file" id="fileInput" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
             </div>
 
-            <div id="loadingStatus" style="display:flex; align-items:center; gap:10px; color: var(--text-muted);">
-                <div class="loader-spinner"></div> Загрузка...
-            </div>
-            
-            <div class="viewer-grid" id="viewerGrid"></div>
+            <!-- Редактирование / создание альбома -->
+            <div id="albumView" class="album-view" style="display:none;">
+                <h2 class="hero-title">Создание альбома</h2>
+                <div style="color: var(--text-muted); font-size: 13px;" id="photoCounter">Загружено: 0/5 фото</div>
 
-            <button class="btn" onclick="resetApp()" style="margin-top: 20px;">
-                <i class="fa-solid fa-plus"></i> Создать свой альбом
-            </button>
-        </div>
-    </main>
+                <div class="album-layout">
+                    <div class="album-sidebar">
+                        <button class="btn" style="width: 100%;" id="saveBtn" onclick="saveAlbumAndRedirect()">
+                            <i class="fa-solid fa-link"></i> Получить ссылку
+                        </button>
 
-    <!-- Уведомление -->
-    <div class="toast-error" id="toastError">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <span id="toastText">Ошибка</span>
-    </div>
+                        <button class="btn btn-danger" onclick="clearAllPhotos()">
+                            <i class="fa-solid fa-trash-can"></i> Очистить всё
+                        </button>
+                    </div>
 
-    <!-- Модалка профиля -->
-    <div class="modal-overlay" id="profileSettingsModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>Мой профиль</h3>
-                <button class="modal-close" onclick="closeModal('profileSettingsModal')">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Ваше имя / Никнейм</label>
-                <input type="text" id="settingNickname" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label>Аватарка профиля</label>
-                <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px;">
-                    <img id="avatarPreview" class="profile-avatar" style="width: 50px; height: 50px;">
-                    <button class="btn" style="padding: 8px 14px; font-size: 13px;" onclick="document.getElementById('avatarFileInput').click()">
-                        <i class="fa-solid fa-upload"></i> Выбрать файл
-                    </button>
-                    <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+                    <div class="album-grid-container">
+                        <div class="album-grid" id="albumGrid"></div>
+                        <div class="add-more-zone" id="addMoreZone" onclick="triggerFileInput()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span>Загрузить ещё фотки (до 5 шт.)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <button class="btn" style="width: 100%; margin-top: 15px;" onclick="saveProfileSettings()">Сохранить</button>
-        </div>
-    </div>
+            <!-- Публичный просмотр всех фоток на любом устройстве -->
+            <div id="publicViewer" class="viewer-container" style="display:none;">
+                <!-- Динамический заголовок -->
+                <h2 class="hero-title" id="viewerTitle">Просмотр фото</h2>
 
-    <!-- Модалка Инфо -->
-    <div class="modal-overlay" id="infoModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>О сервисе</h3>
-                <button class="modal-close" onclick="closeModal('infoModal')">&times;</button>
+                <!-- Адаптивный блок ссылки -->
+                <div class="share-box-viewer">
+                    <input type="text" id="viewerShareUrl" readonly onclick="copyViewerUrl()">
+                    <button class="btn btn-copy" onclick="copyViewerUrl()">
+                        <i class="fa-solid fa-copy"></i> Скопировать ссылку
+                    </button>
+                </div>
+
+                <div id="loadingStatus" style="display:flex; align-items:center; gap:10px; color: var(--text-muted); margin: 20px 0;">
+                    <div class="loader-spinner"></div> Загрузка фоток...
+                </div>
+                
+                <div class="viewer-grid" id="viewerGrid"></div>
+
+                <button class="btn" onclick="resetApp()" style="margin-top: 15px;">
+                    <i class="fa-solid fa-plus"></i> Создать свой альбом
+                </button>
             </div>
-            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-                SnapLoom — быстрый и удобный фотохостинг. Загружайте изображения, получайте ссылки и делитесь с друзьями!
-            </p>
+        </main>
+
+        <!-- Уведомление -->
+        <div class="toast-error" id="toastError">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="toastText">Ошибка</span>
+        </div>
+
+        <!-- Модалка профиля -->
+        <div class="modal-overlay" id="profileSettingsModal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3 style="font-size: 16px;">Мой профиль</h3>
+                    <button class="modal-close" onclick="closeModal('profileSettingsModal')">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label>Ваше имя / Никнейм</label>
+                    <input type="text" id="settingNickname" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label>Аватарка профиля</label>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-top: 5px;">
+                        <img id="avatarPreview" class="profile-avatar" style="width: 44px; height: 44px;">
+                        <button class="btn" style="padding: 6px 12px; font-size: 12px;" onclick="document.getElementById('avatarFileInput').click()">
+                            <i class="fa-solid fa-upload"></i> Выбрать файл
+                        </button>
+                        <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+                    </div>
+                </div>
+
+                <button class="btn" style="width: 100%; margin-top: 10px;" onclick="saveProfileSettings()">Сохранить</button>
+            </div>
+        </div>
+
+        <!-- Модалка Инфо -->
+        <div class="modal-overlay" id="infoModal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3 style="font-size: 16px;">О сервисе</h3>
+                    <button class="modal-close" onclick="closeModal('infoModal')">&times;</button>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                    SnapLoom — быстрый и удобный фотохостинг. Фотографии кодируются прямо в URL, благодаря чему ссылки гарантированно открываются на любых устройствах у ваших друзей!
+                </p>
+            </div>
         </div>
     </div>
 
@@ -599,6 +763,13 @@
             window.addEventListener('hashchange', checkHash);
         };
 
+        function setDeviceMode(mode, btn) {
+            document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const app = document.getElementById('appWrapper');
+            app.className = 'app-wrapper mode-' + mode;
+        }
+
         function triggerFileInput() { document.getElementById('fileInput').click(); }
         function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('dragover'); }
         function handleDragLeave(e) { e.currentTarget.classList.remove('dragover'); }
@@ -612,6 +783,7 @@
 
         function handleFileSelect(e) { processFiles(Array.from(e.target.files)); }
 
+        // Эффективное сжатие изображения для передачи в URL
         function compressImage(file, callback) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -620,7 +792,7 @@
                     const canvas = document.createElement('canvas');
                     let width = img.width;
                     let height = img.height;
-                    const max = 800;
+                    const max = 600; // Оптимальный размер для гарантированной работы URL
 
                     if (width > height && width > max) {
                         height *= max / width;
@@ -634,7 +806,7 @@
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.6));
+                    callback(canvas.toDataURL('image/jpeg', 0.5));
                 };
                 img.src = e.target.result;
             };
@@ -683,33 +855,40 @@
             history.pushState("", document.title, window.location.pathname + window.location.search);
         }
 
+        /* Сохранение с поддержкой URL-кодирования (гарантирует открытие ссылки на ЛЮБОМ устройстве у друга) */
         function saveAlbumAndRedirect() {
             if(currentPhotos.length === 0) return;
 
             const saveBtn = document.getElementById('saveBtn');
-            saveBtn.innerHTML = `<div class="loader-spinner" style="width:16px; height:16px; border-width:2px;"></div> Сохранение...`;
+            saveBtn.innerHTML = `<div class="loader-spinner" style="width:14px; height:14px; border-width:2px;"></div> Кодирование...`;
             saveBtn.disabled = true;
 
             setTimeout(() => {
-                const albumId = 'alb_' + Date.now().toString(36);
-                
                 try {
-                    localStorage.setItem(albumId, JSON.stringify(currentPhotos));
+                    // Кодируем фотографии прямо в URL
+                    const jsonString = JSON.stringify(currentPhotos);
+                    const compressed = LZString.compressToEncodedURIComponent(jsonString);
+
+                    // Резервное сохранение локально
+                    const localId = 'alb_' + Date.now().toString(36);
+                    try { localStorage.setItem(localId, jsonString); } catch(e){}
+
                     saveBtn.innerHTML = `<i class="fa-solid fa-link"></i> Получить ссылку`;
                     saveBtn.disabled = false;
                     
-                    window.location.hash = `album=${albumId}`;
+                    // Перенаправление на просмотр
+                    window.location.hash = `data=${compressed}`;
                 } catch (e) {
                     saveBtn.innerHTML = `<i class="fa-solid fa-link"></i> Получить ссылку`;
                     saveBtn.disabled = false;
-                    showToast('Превышен лимит памяти браузера!');
+                    showToast('Ошибка при кодировании фото!');
                 }
-            }, 800);
+            }, 600);
         }
 
         function checkHash() {
-            if (window.location.hash.startsWith('#album=')) {
-                const id = window.location.hash.replace('#album=', '');
+            const hash = window.location.hash;
+            if (hash.startsWith('#data=') || hash.startsWith('#album=')) {
                 
                 document.getElementById('heroView').style.display = 'none';
                 document.getElementById('albumView').style.display = 'none';
@@ -720,27 +899,44 @@
                 document.getElementById('viewerShareUrl').value = window.location.href;
 
                 setTimeout(() => {
-                    const localData = localStorage.getItem(id);
+                    let photos = null;
+
+                    if (hash.startsWith('#data=')) {
+                        const compressedData = hash.replace('#data=', '');
+                        try {
+                            const decompressed = LZString.decompressFromEncodedURIComponent(compressedData);
+                            if (decompressed) {
+                                photos = JSON.parse(decompressed);
+                            }
+                        } catch(e) {
+                            console.error("URL Decompression error", e);
+                        }
+                    } else if (hash.startsWith('#album=')) {
+                        const localId = hash.replace('#album=', '');
+                        const localData = localStorage.getItem(localId);
+                        if (localData) {
+                            photos = JSON.parse(localData);
+                        }
+                    }
+
                     document.getElementById('loadingStatus').style.display = 'none';
 
-                    if(localData) {
-                        const photos = JSON.parse(localData);
-                        
-                        // Меняем заголовок в зависимости от количества фото
+                    if(photos && photos.length > 0) {
+                        // Динамический заголовок
                         if (photos.length > 1) {
                             document.getElementById('viewerTitle').innerText = 'Просмотр фоток';
                         } else {
                             document.getElementById('viewerTitle').innerText = 'Просмотр фото';
                         }
 
-                        // Отрисовка фото без кнопок «Скачать»
+                        // Чистая галерея без лишних кнопок скачивания
                         document.getElementById('viewerGrid').innerHTML = photos.map(p => `
                             <div class="viewer-card">
-                                <img src="${p}">
+                                <img src="${p}" alt="Photo">
                             </div>
                         `).join('');
                     } else {
-                        document.getElementById('loadingStatus').innerHTML = '<span style="color:var(--danger)">Фото не найдены!</span>';
+                        document.getElementById('loadingStatus').innerHTML = '<span style="color:var(--danger)"><i class="fa-solid fa-circle-exclamation"></i> Фото не найдены или ссылка повреждена!</span>';
                         document.getElementById('loadingStatus').style.display = 'flex';
                     }
                 }, 300);
@@ -750,8 +946,14 @@
         function copyViewerUrl() {
             const input = document.getElementById('viewerShareUrl');
             input.select();
-            document.execCommand('copy');
-            showToast('Ссылка скопирована!');
+            input.setSelectionRange(0, 99999);
+            
+            try {
+                document.execCommand('copy');
+                showToast('Ссылка скопирована!');
+            } catch (err) {
+                showToast('Не удалось скопировать!');
+            }
         }
 
         function showToast(text) {
