@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnapLoom — Хостинг фото и альбомов</title>
+    <title>SnapLoom — Хостинг фото</title>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -39,7 +39,7 @@
             overflow-x: hidden;
         }
 
-        /* Бесконечная бегущая лента */
+        /* Бегущая лента */
         .top-marquee {
             width: 100%;
             height: 60px;
@@ -331,43 +331,27 @@
             background: rgba(139, 92, 246, 0.1);
         }
 
-        /* Стилизованный блок ссылки без наложения элементов */
-        .share-box {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            box-sizing: border-box;
-        }
-
-        .share-input-group {
+        /* Блок копирования ссылки */
+        .share-box-viewer {
             display: flex;
             align-items: center;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .share-input-group input {
-            flex: 1;
-            min-width: 0;
-            background: var(--bg-primary);
+            gap: 10px;
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 13px;
-            outline: none;
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            margin-bottom: 10px;
         }
 
-        .share-input-group .btn-copy {
-            padding: 10px 14px;
-            height: 100%;
-            flex-shrink: 0;
-            border-radius: 8px;
+        .share-box-viewer input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
         }
 
         .toast-error {
@@ -424,11 +408,11 @@
             font-size: 14px;
         }
 
-        /* Галерея просмотра */
+        /* Галерея просмотра без кнопок скачивания */
         .viewer-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .viewer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; width: 100%; }
+        .viewer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; }
         .viewer-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
-        .viewer-card img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; }
+        .viewer-card img { width: 100%; height: auto; max-height: 500px; object-fit: contain; border-radius: 10px; display: block; }
 
         /* Loader */
         .loader-spinner {
@@ -503,17 +487,6 @@
                     <button class="btn btn-danger" onclick="clearAllPhotos()">
                         <i class="fa-solid fa-trash-can"></i> Очистить всё
                     </button>
-
-                    <!-- Аккуратный блок ссылки без перекрытий -->
-                    <div class="share-box" id="shareBox" style="display:none;">
-                        <div style="font-size: 12px; color: #4ade80; font-weight: 600;">
-                            <i class="fa-solid fa-check-circle"></i> Ссылка готова!
-                        </div>
-                        <div class="share-input-group">
-                            <input type="text" id="shareUrlInput" readonly onclick="copyShareUrl()">
-                            <button class="btn btn-copy" onclick="copyShareUrl()"><i class="fa-solid fa-copy"></i></button>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="album-grid-container">
@@ -526,20 +499,32 @@
             </div>
         </div>
 
-        <!-- Публичный просмотр всех фоток в альбоме -->
+        <!-- Публичный просмотр всех фоток -->
         <div id="publicViewer" class="viewer-container" style="display:none;">
-            <h2 class="hero-title">Просмотр альбома</h2>
-            <div id="loadingStatus" style="display:flex; align-items:center; gap:10px; color: var(--text-muted);">
-                <div class="loader-spinner"></div> Загрузка фоток...
+            <!-- Динамический заголовок: Просмотр фото / Просмотр фоток -->
+            <h2 class="hero-title" id="viewerTitle">Просмотр фото</h2>
+
+            <!-- Блок с кнопкой Скопировать ссылку -->
+            <div class="share-box-viewer">
+                <input type="text" id="viewerShareUrl" readonly onclick="copyViewerUrl()">
+                <button class="btn" style="padding: 8px 14px; font-size: 13px;" onclick="copyViewerUrl()">
+                    <i class="fa-solid fa-copy"></i> Скопировать ссылку
+                </button>
             </div>
+
+            <div id="loadingStatus" style="display:flex; align-items:center; gap:10px; color: var(--text-muted);">
+                <div class="loader-spinner"></div> Загрузка...
+            </div>
+            
             <div class="viewer-grid" id="viewerGrid"></div>
+
             <button class="btn" onclick="resetApp()" style="margin-top: 20px;">
                 <i class="fa-solid fa-plus"></i> Создать свой альбом
             </button>
         </div>
     </main>
 
-    <!-- Уведомление об ошибке -->
+    <!-- Уведомление -->
     <div class="toast-error" id="toastError">
         <i class="fa-solid fa-triangle-exclamation"></i>
         <span id="toastText">Ошибка</span>
@@ -627,7 +612,6 @@
 
         function handleFileSelect(e) { processFiles(Array.from(e.target.files)); }
 
-        // Сжатие изображения
         function compressImage(file, callback) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -693,14 +677,12 @@
 
         function resetApp() {
             currentPhotos = [];
-            document.getElementById('shareBox').style.display = 'none';
             document.getElementById('albumView').style.display = 'none';
             document.getElementById('publicViewer').style.display = 'none';
             document.getElementById('heroView').style.display = 'flex';
             history.pushState("", document.title, window.location.pathname + window.location.search);
         }
 
-        // Сохранение и перенаправление на страницу с фотографиями
         function saveAlbumAndRedirect() {
             if(currentPhotos.length === 0) return;
 
@@ -716,14 +698,13 @@
                     saveBtn.innerHTML = `<i class="fa-solid fa-link"></i> Получить ссылку`;
                     saveBtn.disabled = false;
                     
-                    // Переход на страницу готового альбома
                     window.location.hash = `album=${albumId}`;
                 } catch (e) {
                     saveBtn.innerHTML = `<i class="fa-solid fa-link"></i> Получить ссылку`;
                     saveBtn.disabled = false;
                     showToast('Превышен лимит памяти браузера!');
                 }
-            }, 1000);
+            }, 800);
         }
 
         function checkHash() {
@@ -735,6 +716,8 @@
                 document.getElementById('publicViewer').style.display = 'flex';
                 document.getElementById('loadingStatus').style.display = 'flex';
                 document.getElementById('viewerGrid').innerHTML = '';
+                
+                document.getElementById('viewerShareUrl').value = window.location.href;
 
                 setTimeout(() => {
                     const localData = localStorage.getItem(id);
@@ -742,24 +725,30 @@
 
                     if(localData) {
                         const photos = JSON.parse(localData);
+                        
+                        // Меняем заголовок в зависимости от количества фото
+                        if (photos.length > 1) {
+                            document.getElementById('viewerTitle').innerText = 'Просмотр фоток';
+                        } else {
+                            document.getElementById('viewerTitle').innerText = 'Просмотр фото';
+                        }
+
+                        // Отрисовка фото без кнопок «Скачать»
                         document.getElementById('viewerGrid').innerHTML = photos.map(p => `
                             <div class="viewer-card">
                                 <img src="${p}">
-                                <a href="${p}" download="photo.jpg" class="btn" style="margin-top:10px; width:100%; font-size:13px;">
-                                    <i class="fa-solid fa-download"></i> Скачать
-                                </a>
                             </div>
                         `).join('');
                     } else {
-                        document.getElementById('loadingStatus').innerHTML = '<span style="color:var(--danger)">Альбом не найден или удален!</span>';
+                        document.getElementById('loadingStatus').innerHTML = '<span style="color:var(--danger)">Фото не найдены!</span>';
                         document.getElementById('loadingStatus').style.display = 'flex';
                     }
-                }, 400);
+                }, 300);
             }
         }
 
-        function copyShareUrl() {
-            const input = document.getElementById('shareUrlInput');
+        function copyViewerUrl() {
+            const input = document.getElementById('viewerShareUrl');
             input.select();
             document.execCommand('copy');
             showToast('Ссылка скопирована!');
